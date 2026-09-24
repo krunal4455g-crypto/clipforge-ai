@@ -60,7 +60,7 @@ def cut(video,st,en,out):
     run(["ffmpeg","-y","-ss",str(st),"-i",str(video),"-t",str(en-st),"-vf",vf,"-c:v","libx264","-preset","veryfast","-crf","23","-c:a","aac","-movflags","+faststart",str(out)])
 
 @app.get("/",response_class=HTMLResponse)
-def home(): return (ROOT/"static/index.html").read_text()
+def home(): return (ROOT/"index.html").read_text()
 
 @app.post("/api/analyze")
 def analyze(url:str=Form(...),clips:int=Form(5)):
