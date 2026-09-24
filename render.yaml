@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: clipforge-ai
+    runtime: docker
+    plan: free
+    healthCheckPath: /
