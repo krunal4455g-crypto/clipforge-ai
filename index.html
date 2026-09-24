@@ -1,0 +1,21 @@
+<!doctype html><html><meta name="viewport" content="width=device-width,initial-scale=1"><title>ClipForge AI</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0b0f0d;color:#f5f7f5;font-family:system-ui,-apple-system,sans-serif}
+main{max-width:620px;margin:auto;padding:16px}.card{background:#141a17;border:1px solid #29322d;border-radius:22px;padding:20px;box-shadow:0 12px 35px #0005}
+.logo{font-size:26px;font-weight:900}.tag{color:#9eaaa2;font-size:12px;margin:4px 0 20px}input,button,select{width:100%;min-height:52px;border-radius:13px;border:1px solid #303a34;background:#0d1210;color:#fff;padding:13px;font-size:15px}button{margin-top:10px;font-weight:900;background:#29402f}button:disabled{opacity:.55}.row{display:grid;grid-template-columns:1fr 90px;gap:8px}.status{font-size:13px;color:#a7b0aa;margin:15px 0;line-height:1.5}.clip{margin-top:10px;border:1px solid #29322d;border-radius:15px;padding:13px}.top{display:flex;justify-content:space-between}.score{font-size:20px;font-weight:900}.time{font-size:12px;color:#a7b0aa;margin-top:4px}.txt{font-size:13px;line-height:1.4;margin-top:9px;color:#d6ddd8}.download{display:block;text-align:center;text-decoration:none;color:#fff;background:#29402f;border-radius:10px;padding:11px;margin-top:11px;font-weight:800;font-size:13px}
+</style><main><div class="card"><div class="logo">✂️ ClipForge AI</div><div class="tag">PRIVATE • MOBILE-FIRST VIRAL CLIP FINDER</div>
+<div class="row"><input id="url" placeholder="Paste YouTube link"><select id="n"><option>5 clips</option><option>3 clips</option><option>7 clips</option><option>10 clips</option></select></div>
+<button id="go">⚡ FIND VIRAL CLIPS</button><div id="status" class="status">Ready. Paste a video link.</div><div id="out"></div></div></main>
+<script>
+const $=x=>document.getElementById(x);
+$("go").onclick=async()=>{
+ const url=$("url").value.trim(),n=parseInt($("n").value);
+ if(!/^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\//i.test(url)){ $("status").textContent="Please paste a valid YouTube link.";return}
+ $("go").disabled=true;$("status").textContent="⏳ Downloading video…";$("out").innerHTML="";
+ try{const fd=new FormData();fd.append("url",url);fd.append("clips",n);
+ const r=await fetch("/api/analyze",{method:"POST",body:fd});const d=await r.json();if(!r.ok)throw Error(d.error||"Processing failed");
+ $("status").textContent="✅ Done. Your clips are ready.";
+ $("out").innerHTML=d.clips.map(c=>`<div class="clip"><div class="top"><b>Clip ${c.id}</b><span class="score">${c.score}</span></div><div class="time">⏱ ${c.start}s → ${c.end}s • 9:16</div><div class="txt">${c.text}</div><a class="download" href="${c.download}">⬇ Download MP4</a></div>`).join("");
+ }catch(e){$("status").textContent="❌ "+e.message}finally{$("go").disabled=false}
+};
+</script></main></html>
